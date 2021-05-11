@@ -32,17 +32,17 @@ namespace Demo.UI
         public override void Proceed()
         {
             base.Proceed();
-            StateManager.ChangeState((int)StateType.SignIn);
+            StateManager.ChangeState((int)StateType.SignInOrUp);
         }
     }
 
     #endregion
 
-    #region SignInState 
+    #region SignInOrUpState 
 
-    public class UserSignInState : UserState
+    public class UserSignInOrUpState : UserState
     {
-        public UserSignInState(UserManager userManager) : base(StateType.SignIn, userManager)
+        public UserSignInOrUpState(UserManager userManager) : base(StateType.SignInOrUp, userManager)
         {
 
         }
@@ -61,21 +61,24 @@ namespace Demo.UI
         public override void Exit()
         {
             base.Exit();
+            UserManager.UIManager.HidePanel(UserManager.PanelController.Login.gameObject);
+            UserManager.UIManager.HidePanel(UserManager.PanelController.Register.gameObject);
         }
 
         public override void Proceed()
         {
             base.Proceed();
+            StateManager.ChangeState((int)StateType.Loby);
         }
     }
 
     #endregion
 
-    #region SignUpState 
+    #region SignInOrUpState 
 
-    public class UserSignUpState : UserState
+    public class UserLobyState : UserState
     {
-        public UserSignUpState(UserManager userManager) : base(StateType.SignUp, userManager)
+        public UserLobyState(UserManager userManager) : base(StateType.Loby, userManager)
         {
 
         }
@@ -83,6 +86,7 @@ namespace Demo.UI
         public override void Enter()
         {
             base.Enter();
+            UserManager.UIManager.ShowPanel(UserManager.PanelController.Loby.gameObject);
         }
 
         public override void Update()
@@ -102,5 +106,4 @@ namespace Demo.UI
     }
 
     #endregion
-
 }

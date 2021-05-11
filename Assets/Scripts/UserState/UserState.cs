@@ -11,8 +11,8 @@ namespace Demo.UI
         public enum StateType
         {
             Start = 0,
-            SignIn,
-            SignUp,
+            SignInOrUp,
+            Loby,
         }
 
         protected StateType mStateType;

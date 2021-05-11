@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DevAccountEmail: yasin.kartal@ingamegroup.com
   DevAccountToken: wcxz77n89jrt8hge4rm7hferyomnh9wmrmq1kqainfh3fay46j5h1jopbwc38ajk1r3bupapmwrcx9txiy8t1jakidk4ao7ssbjkhuiajurosfjtunjkzjcw7ywhzpdx19soupwx4y6rgkg36s6wte1fi8eim8oiconyxxqgi5onw3o7z4q8n86hj1edxt478m7en9q8
-  SelectedStudio: 
+  SelectedStudio: YasinKStudios
   SdkPath: Assets/PlayFabSDK
   EdExPath: 
   LocalCloudScriptPath: 
   PanelIsShown: 0
-  curMainMenuIdx: 3
+  curMainMenuIdx: 1
   curSubMenuIdx: 0

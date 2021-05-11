@@ -6,9 +6,15 @@ namespace Demo.UI
 {
     public class UserManager : MonoBehaviour
     {
+        #region Fields
+
         public UIManager UIManager;
         public PanelController PanelController;
         public StateManager StateManager { get; private set; }
+
+        #endregion
+
+        #region Methods
 
         private void Awake()
         {
@@ -29,13 +35,20 @@ namespace Demo.UI
         void InitState()
         {
             StateManager.AddState(new UserStartState(this));
-            StateManager.AddState(new UserSignInState(this));
-            StateManager.AddState(new UserSignUpState(this));
+            StateManager.AddState(new UserSignInOrUpState(this));
+            StateManager.AddState(new UserLobyState(this));
         }
 
         private void Initialize()
         {
             UIManager.Initialize();
         }
+
+        public void LoginAccount()
+        {
+            StateManager.CheckTheProcess = true;
+        }
+
+        #endregion
     }
 }

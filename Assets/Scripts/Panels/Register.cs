@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using PlayFab;
 using PlayFab.ClientModels;
+using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace Demo.UI
 {
-    public class Login : MonoBehaviour
+    public class Register : MonoBehaviour
     {
         #region Fields
 
@@ -23,8 +23,8 @@ namespace Demo.UI
 
         public TMP_InputField MailInput;
         public TMP_InputField Password;
-        public Button SignInButton;
-        public Button SignUpButton;
+        public TMP_InputField TryPassword;
+        public Button RegisterButton;
 
         #endregion
 
@@ -32,13 +32,7 @@ namespace Demo.UI
 
         void Start()
         {
-            SignUpButton.onClick.AddListener(() => SingUp());
-            SignInButton.onClick.AddListener(() => SingIn());
-        }
-
-        void Update()
-        {
-
+            RegisterButton.onClick.AddListener(() => SingUp());
         }
 
         public void Initialize(UserManager userManager, UIManager uIManager)
@@ -49,21 +43,15 @@ namespace Demo.UI
 
         void SingUp()
         {
-            StartCoroutine(UserManager.PanelController.RegisterPanelAnimation());
-        }
-
-        void SingIn()
-        {
-            if (Password.text != null || MailInput.text != null)
+            if (Password.text == TryPassword.text || MailInput.text != null)
             {
-                var request = new LoginWithEmailAddressRequest
+                var request = new RegisterPlayFabUserRequest
                 {
                     Email = MailInput.text,
                     Password = Password.text,
+                    RequireBothUsernameAndEmail = false
                 };
-                PlayFabClientAPI.LoginWithEmailAddress(request, OnRegisterSuccess, OnError);
-
-                UserManager.Invoke("LoginAccount", 2f);
+                PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnError);
             }
             else
             {
@@ -71,9 +59,9 @@ namespace Demo.UI
             }
         }
 
-        void OnRegisterSuccess(LoginResult result)
+        void OnRegisterSuccess(RegisterPlayFabUserResult result)
         {
-            UIManager.MessageArea(Message, MessageText, Green, "Login successful.");
+            UIManager.MessageArea(Message, MessageText, Green, "Your registration was successful.");
         }
 
         void OnError(PlayFabError error)

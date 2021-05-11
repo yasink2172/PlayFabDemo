@@ -6,19 +6,31 @@ namespace Demo.UI
 {
     public class StateManager
     {
-        private Dictionary<int, IState> mStates;
+        #region Fields
 
+        private Dictionary<int, IState> mStates;
         private IState mCurrentState;
 
-        public int CurrentState { get { return mCurrentState == null ? 0 : mCurrentState.ID; } }
+        #endregion
 
+        #region Properties
+
+        public int CurrentState { get { return mCurrentState == null ? 0 : mCurrentState.ID; } }
         public bool CheckTheProcess { get; set; }
+
+        #endregion
+
+        #region Constructors
 
         public StateManager()
         {
             mCurrentState = null;
             mStates = new Dictionary<int, IState>();
         }
+
+        #endregion
+
+        #region Methods
 
         public void StartState(int stateID)
         {
@@ -55,5 +67,7 @@ namespace Demo.UI
         {
             mCurrentState = mStates[currentState];
         }
+
+        #endregion
     }
 }
