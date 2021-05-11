@@ -11,24 +11,30 @@ namespace Demo.UI
         public enum StateType
         {
             Start = 0,
+            SignIn,
+            SignUp,
         }
 
-        protected StateType myStateType;
+        protected StateType mStateType;
+        protected StateManager StateManager;
+        protected UserManager UserManager;
 
         #endregion
 
         #region Constructors
 
-        public UserState(StateType stateType)
+        public UserState(StateType stateType, UserManager userManager)
         {
-            myStateType = stateType;
+            mStateType = stateType;
+            UserManager = userManager;
+            StateManager = UserManager.StateManager;
         }
 
         #endregion
 
         #region Interface
 
-        public int ID { get { return (int)myStateType; } }
+        public int ID { get { return (int)mStateType; } }
 
         public virtual void Enter()
         {
@@ -37,7 +43,11 @@ namespace Demo.UI
 
         public virtual void Update()
         {
-
+            if (StateManager.CheckTheProcess)
+            {
+                Proceed();
+                StateManager.CheckTheProcess = false;
+            }
         }
 
         public virtual void Exit()
