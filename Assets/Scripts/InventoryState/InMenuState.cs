@@ -4,15 +4,14 @@ using UnityEngine;
 
 namespace Demo.UI
 {
-    public class UserState : IState
+    public class InMenuState : IState
     {
         #region Fields
 
         public enum StateType
         {
-            Start = 0,
-            SignInOrUp,
-            Loby,
+            Inventory = 0,
+            Shop
         }
 
         protected StateType _stateType;
@@ -24,7 +23,7 @@ namespace Demo.UI
 
         #region Constructors
 
-        public UserState(StateType StateType, UserManager UserManager)
+        public InMenuState(StateType StateType, UserManager UserManager)
         {
             _stateType = StateType;
             _userManager = UserManager;

@@ -8,14 +8,14 @@ namespace Demo.UI
     {
         #region Fields
 
-        private Dictionary<int, IState> mStates;
-        private IState mCurrentState;
+        private Dictionary<int, IState> _states;
+        private IState _currentState;
 
         #endregion
 
         #region Properties
 
-        public int CurrentState { get { return mCurrentState == null ? 0 : mCurrentState.ID; } }
+        public int CurrentState { get { return _currentState == null ? 0 : _currentState.ID; } }
         public bool CheckTheProcess { get; set; }
 
         #endregion
@@ -24,48 +24,59 @@ namespace Demo.UI
 
         public StateManager()
         {
-            mCurrentState = null;
-            mStates = new Dictionary<int, IState>();
+            _currentState = null;
+            _states = new Dictionary<int, IState>();
         }
 
         #endregion
 
         #region Methods
 
+        //To start the situation.
         public void StartState(int stateID)
         {
-            mCurrentState = mStates[stateID];
-            mCurrentState.Enter();
+            _currentState = _states[stateID];
+            _currentState.Enter();
         }
 
+        //To add a status.
         public void AddState(IState state)
         {
-            mStates.Add(state.ID, state);
+            _states.Add(state.ID, state);
         }
 
+        //To clear the status list.
+        public void ClearStates()
+        {
+            _states.Clear();
+        }
+
+        //To change the situation.
         public void ChangeState(int stateID)
         {
-            if (mStates.ContainsKey(stateID))
+            if (_states.ContainsKey(stateID))
             {
-                IState newState = mStates[stateID];
+                IState newState = _states[stateID];
 
-                if (mCurrentState != null)
-                    mCurrentState.Exit();
+                if (_currentState != null)
+                    _currentState.Exit();
 
-                mCurrentState = newState;
-                mCurrentState.Enter();
+                _currentState = newState;
+                _currentState.Enter();
             }
         }
 
+        //Status update.
         public void Update()
         {
-            if (mCurrentState != null)
-                mCurrentState.Update();
+            if (_currentState != null)
+                _currentState.Update();
         }
 
+        //To change the state of the moment.
         public void SetStates(int currentState)
         {
-            mCurrentState = mStates[currentState];
+            _currentState = _states[currentState];
         }
 
         #endregion

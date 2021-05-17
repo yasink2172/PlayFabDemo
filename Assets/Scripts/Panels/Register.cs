@@ -12,8 +12,8 @@ namespace Demo.UI
     {
         #region Fields
 
-        private UserManager UserManager;
-        private UIManager UIManager;
+        private UserManager _userManager;
+        private UIManager _uiManager;
 
         public GameObject Message;
         public TextMeshProUGUI MessageText;
@@ -32,41 +32,13 @@ namespace Demo.UI
 
         void Start()
         {
-            RegisterButton.onClick.AddListener(() => SingUp());
+            RegisterButton.onClick.AddListener(() => _userManager.PlayFabManager.SingUp());
         }
 
-        public void Initialize(UserManager userManager, UIManager uIManager)
+        public void Initialize(UserManager UserManager, UIManager UIManager)
         {
-            UserManager = userManager;
-            UIManager = uIManager;
-        }
-
-        void SingUp()
-        {
-            if (Password.text == TryPassword.text || MailInput.text != null)
-            {
-                var request = new RegisterPlayFabUserRequest
-                {
-                    Email = MailInput.text,
-                    Password = Password.text,
-                    RequireBothUsernameAndEmail = false
-                };
-                PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnError);
-            }
-            else
-            {
-                UIManager.MessageArea(Message, MessageText, Red, "Email or password is incorrect, please try again.");
-            }
-        }
-
-        void OnRegisterSuccess(RegisterPlayFabUserResult result)
-        {
-            UIManager.MessageArea(Message, MessageText, Green, "Your registration was successful.");
-        }
-
-        void OnError(PlayFabError error)
-        {
-            UIManager.MessageArea(Message, MessageText, Red, error.ErrorMessage);
+            _userManager = UserManager;
+            _uiManager = UIManager;
         }
 
         #endregion

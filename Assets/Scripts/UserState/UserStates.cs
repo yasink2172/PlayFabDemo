@@ -16,7 +16,7 @@ namespace Demo.UI
         public override void Enter()
         {
             base.Enter();
-            StateManager.CheckTheProcess = true;
+            _stateManager.CheckTheProcess = true;
         }
 
         public override void Update()
@@ -32,7 +32,7 @@ namespace Demo.UI
         public override void Proceed()
         {
             base.Proceed();
-            StateManager.ChangeState((int)StateType.SignInOrUp);
+            _stateManager.ChangeState((int)StateType.SignInOrUp);
         }
     }
 
@@ -50,7 +50,7 @@ namespace Demo.UI
         public override void Enter()
         {
             base.Enter();
-            UserManager.UIManager.ShowPanel(UserManager.PanelController.Login.gameObject);
+            _userManager.UIManager.ShowPanel(_userManager.PanelController.Login.gameObject);         
         }
 
         public override void Update()
@@ -61,20 +61,20 @@ namespace Demo.UI
         public override void Exit()
         {
             base.Exit();
-            UserManager.UIManager.HidePanel(UserManager.PanelController.Login.gameObject);
-            UserManager.UIManager.HidePanel(UserManager.PanelController.Register.gameObject);
+            _userManager.UIManager.HidePanel(_userManager.PanelController.Login.gameObject);
+            _userManager.UIManager.HidePanel(_userManager.PanelController.Register.gameObject);
         }
 
         public override void Proceed()
         {
             base.Proceed();
-            StateManager.ChangeState((int)StateType.Loby);
+            _stateManager.ChangeState((int)StateType.Loby);
         }
     }
 
     #endregion
 
-    #region SignInOrUpState 
+    #region LobyState 
 
     public class UserLobyState : UserState
     {
@@ -86,7 +86,7 @@ namespace Demo.UI
         public override void Enter()
         {
             base.Enter();
-            UserManager.UIManager.ShowPanel(UserManager.PanelController.Loby.gameObject);
+            _userManager.UIManager.ShowPanel(_userManager.PanelController.Loby.gameObject);
         }
 
         public override void Update()

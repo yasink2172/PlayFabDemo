@@ -10,6 +10,7 @@ namespace Demo.UI
 
         public UIManager UIManager;
         public PanelController PanelController;
+        public PlayFabManager PlayFabManager;
         public StateManager StateManager { get; private set; }
 
         #endregion
@@ -21,9 +22,10 @@ namespace Demo.UI
             StateManager = new StateManager();
             Initialize();
         }
+
         void Start()
-        {
-            InitState();
+        {           
+            Init();
             StateManager.StartState(0);
         }
 
@@ -32,21 +34,36 @@ namespace Demo.UI
             StateManager.Update();
         }
 
-        void InitState()
+        void Initialize()
         {
+            UIManager.Initialize(this);
+        }
+
+        void Init()
+        {
+            InitUserState();
+            UIManager.Init();
+        }
+        void InitUserState()
+        {
+            StateManager.ClearStates();
             StateManager.AddState(new UserStartState(this));
             StateManager.AddState(new UserSignInOrUpState(this));
             StateManager.AddState(new UserLobyState(this));
         }
 
-        private void Initialize()
+        public void InitLobyState()
         {
-            UIManager.Initialize();
+            StateManager.ClearStates();
+            StateManager.AddState(new InventoryShowStates(this));
+            StateManager.AddState(new ShopShowStates(this));
         }
 
+        //The account is logged in.
         public void LoginAccount()
         {
             StateManager.CheckTheProcess = true;
+            Invoke("InitLobyState", 0.1f);
         }
 
         #endregion

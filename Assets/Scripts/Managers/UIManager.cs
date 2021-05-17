@@ -10,7 +10,7 @@ namespace Demo.UI
     {
         #region Fields
 
-        public UserManager UserManager;
+        private UserManager _userManager;
 
         private bool _waitHideAnimationEnd;
         private bool _waitShowAnimationEnd;
@@ -19,17 +19,25 @@ namespace Demo.UI
 
         #region Methods
 
-        public void Initialize()
+        public void Initialize(UserManager UserManager)
         {
+            _userManager = UserManager;
             UserManager.PanelController.Initialize(UserManager, this);
             UserManager.PanelController.Login.Initialize(UserManager, this);
             UserManager.PanelController.Register.Initialize(UserManager, this);
             UserManager.PanelController.Loby.Initialize(UserManager, this);
+            UserManager.PanelController.Inventory.Initialize(UserManager, this);
+            UserManager.PanelController.Shop.Initialize(UserManager, this);
+            UserManager.PlayFabManager.Initialize(UserManager, this);
+        }
 
+        public void Init()
+        {
             _waitHideAnimationEnd = false;
             _waitShowAnimationEnd = false;
         }
 
+        //Opens closed panels.
         public void ShowPanel(GameObject panel)
         {
             if (!panel.activeInHierarchy)
@@ -38,6 +46,7 @@ namespace Demo.UI
             }
         }
 
+        //Closes open panels.
         public void HidePanel(GameObject panel)
         {
             if (panel.activeInHierarchy)
@@ -64,6 +73,7 @@ namespace Demo.UI
             }
         }
 
+        //Prints the required message.
         public void MessageArea(GameObject MessageObject, TextMeshProUGUI MessageText, Color color, string Message)
         {
             MessageObject.GetComponent<Image>().color = color;
@@ -72,6 +82,7 @@ namespace Demo.UI
             HideAnimation(MessageObject);
         }
 
+        //Hide animation.
         private IEnumerator CanvasAlphaHideAnimation(CanvasGroup canvasGroup)
         {
             canvasGroup.gameObject.SetActive(true);
@@ -91,6 +102,7 @@ namespace Demo.UI
             _waitHideAnimationEnd = false;
         }
 
+        //Show animation.
         private IEnumerator CanvasAlphaShowAnimation(CanvasGroup canvasGroup)
         {
             canvasGroup.gameObject.SetActive(true);

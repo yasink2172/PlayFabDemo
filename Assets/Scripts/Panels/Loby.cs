@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using PlayFab;
 using PlayFab.ClientModels;
 using TMPro;
+using Newtonsoft.Json;
 
 namespace Demo.UI
 {
@@ -12,10 +13,16 @@ namespace Demo.UI
     {
         #region Fields
 
-        private UserManager UserManager;
-        private UIManager UIManager;
+        private UserManager _userManager;
+        private UIManager _uiManager;
+
+        public SetItem[] items;
 
         public TextMeshProUGUI PlayerID;
+        public TextMeshProUGUI PlayerXP;
+
+        public Button InventoryButton;
+        public Button ShopButton;
 
         #endregion
 
@@ -23,7 +30,9 @@ namespace Demo.UI
 
         void Start()
         {
-            GetTitleData();
+            _userManager.PlayFabManager.GetTitleData();
+            InventoryButton.onClick.AddListener(() => Inventory());
+            ShopButton.onClick.AddListener(() => Shop());
         }
 
         void Update()
@@ -31,26 +40,32 @@ namespace Demo.UI
 
         }
 
-        public void Initialize(UserManager userManager, UIManager uIManager)
+        public void Initialize(UserManager UserManager, UIManager UIManager)
         {
-            UserManager = userManager;
-            UIManager = uIManager;
+            _userManager = UserManager;
+            _uiManager = UIManager;
         }
 
-        void GetTitleData()
+        void Inventory()
         {
-            GetAccountInfoRequest request = new GetAccountInfoRequest();
-            PlayFabClientAPI.GetAccountInfo(request, PlayerInfo, OnError);
+            if (!_userManager.PanelController.Inventory.gameObject.activeInHierarchy)
+            {
+                _userManager.StateManager.ChangeState(0);
+                _userManager.PlayFabManager.UpdateInventory();
+            }
+            InventoryButton.enabled = false;
+            ShopButton.enabled = true;
         }
 
-        void PlayerInfo(GetAccountInfoResult result)
+        void Shop()
         {
-            PlayerID.text = "ID : " + result.AccountInfo.PlayFabId;
-        }
-
-        void OnError(PlayFabError error)
-        {
-
+            if (!_userManager.PanelController.Shop.gameObject.activeInHierarchy)
+            {
+                _userManager.StateManager.ChangeState(1);
+                _userManager.PlayFabManager.GetItemPrices();
+            }
+            InventoryButton.enabled = true;
+            ShopButton.enabled = false;
         }
 
         #endregion

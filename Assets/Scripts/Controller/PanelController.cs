@@ -8,24 +8,25 @@ namespace Demo.UI
     {
         #region Fields
 
-        private UserManager UserManager;
-        private UIManager UIManager;
+        private UserManager _userManager;
+        private UIManager _uiManager;
 
         public Login Login;
         public Register Register;
         public Loby Loby;
+        public Inventory Inventory;
+        public Shop Shop;
 
-        static int[] SingInPanelRectTransformPos = new int[] { 0, -500 };//MID , LEFT
+        static int[] SingInPanelRectTransformPos = new int[] { 0, -500 };  //MID , LEFT
 
         #endregion
 
-        public void Initialize(UserManager userManager, UIManager uIManager)
-        {
-            UserManager = userManager;
-            UIManager = uIManager;
-        }
-
         #region Methods
+        public void Initialize(UserManager UserManager, UIManager UIManager)
+        {
+            _userManager = UserManager;
+            _uiManager = UIManager;
+        }
 
         //Animations               
         public IEnumerator RegisterPanelAnimation()
@@ -41,7 +42,7 @@ namespace Demo.UI
                     Vector2 PosSecond = new Vector2(SingInPanelRectTransformPos[1], Login.gameObject.GetComponent<RectTransform>().anchoredPosition.y);
                     Login.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(PosFirst, PosSecond, time);
                 }
-                UIManager.ShowAnimation(Register.gameObject);
+                _uiManager.ShowAnimation(Register.gameObject);
             }
         }
 

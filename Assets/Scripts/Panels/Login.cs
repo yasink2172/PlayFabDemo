@@ -12,8 +12,8 @@ namespace Demo.UI
     {
         #region Fields
 
-        private UserManager UserManager;
-        private UIManager UIManager;
+        private UserManager _userManager;
+        private UIManager _uiManager;
 
         public GameObject Message;
         public TextMeshProUGUI MessageText;
@@ -33,7 +33,7 @@ namespace Demo.UI
         void Start()
         {
             SignUpButton.onClick.AddListener(() => SingUp());
-            SignInButton.onClick.AddListener(() => SingIn());
+            SignInButton.onClick.AddListener(() => _userManager.PlayFabManager.SingIn());
         }
 
         void Update()
@@ -41,44 +41,15 @@ namespace Demo.UI
 
         }
 
-        public void Initialize(UserManager userManager, UIManager uIManager)
+        public void Initialize(UserManager UserManager, UIManager UIManager)
         {
-            UserManager = userManager;
-            UIManager = uIManager;
+            _userManager = UserManager;
+            _uiManager = UIManager;
         }
 
         void SingUp()
         {
-            StartCoroutine(UserManager.PanelController.RegisterPanelAnimation());
-        }
-
-        void SingIn()
-        {
-            if (Password.text != null || MailInput.text != null)
-            {
-                var request = new LoginWithEmailAddressRequest
-                {
-                    Email = MailInput.text,
-                    Password = Password.text,
-                };
-                PlayFabClientAPI.LoginWithEmailAddress(request, OnRegisterSuccess, OnError);
-
-                UserManager.Invoke("LoginAccount", 2f);
-            }
-            else
-            {
-                UIManager.MessageArea(Message, MessageText, Red, "Email or password is incorrect, please try again.");
-            }
-        }
-
-        void OnRegisterSuccess(LoginResult result)
-        {
-            UIManager.MessageArea(Message, MessageText, Green, "Login successful.");
-        }
-
-        void OnError(PlayFabError error)
-        {
-            UIManager.MessageArea(Message, MessageText, Red, error.ErrorMessage);
+            StartCoroutine(_userManager.PanelController.RegisterPanelAnimation());
         }
 
         #endregion
