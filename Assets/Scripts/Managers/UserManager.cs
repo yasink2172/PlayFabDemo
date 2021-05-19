@@ -11,6 +11,7 @@ namespace Demo.UI
         public UIManager UIManager;
         public PanelController PanelController;
         public PlayFabManager PlayFabManager;
+        public GameManager GameManager;
         public StateManager StateManager { get; private set; }
 
         #endregion
@@ -57,6 +58,8 @@ namespace Demo.UI
             StateManager.ClearStates();
             StateManager.AddState(new InventoryShowStates(this));
             StateManager.AddState(new ShopShowStates(this));
+            StateManager.AddState(new GameCamShowState(this));
+            StateManager.AddState(new LeaderboardsShowState(this));
         }
 
         //The account is logged in.
@@ -64,6 +67,7 @@ namespace Demo.UI
         {
             StateManager.CheckTheProcess = true;
             Invoke("InitLobyState", 0.1f);
+            PlayFabManager.GetItemPrices();
         }
 
         #endregion

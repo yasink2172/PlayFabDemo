@@ -24,14 +24,14 @@ namespace Demo.UI
             _uiManager = UIManager;
         }
 
-        public void CreateItems(int itemCount)
+        public void CreateItems(string itemID, int? itemCount, string itemImageURL)
         {
-            for (int i = 0; i < itemCount; i++)
-            {
-                GameObject shopitem = Instantiate(InventoryItem);
-                shopitem.transform.parent = this.transform;
-                InventoryItems.Add(shopitem);
-            }
+            GameObject _inventoryItem = Instantiate(InventoryItem);
+            _inventoryItem.transform.parent = this.transform;
+            _inventoryItem.GetComponent<SetItem>().ItemID = itemID;
+            _inventoryItem.GetComponent<SetItem>().ItemCountText.text = itemCount.ToString();
+            StartCoroutine(_uiManager.GetTexture(itemImageURL, _inventoryItem.GetComponent<SetItem>().ItemImage));
+            InventoryItems.Add(_inventoryItem);
         }
 
         public void DestroyItems()

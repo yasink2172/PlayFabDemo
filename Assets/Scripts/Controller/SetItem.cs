@@ -13,13 +13,14 @@ namespace Demo.UI
         public PlayFabManager PlayFabManager;
 
         public TextMeshProUGUI ItemName;
-        public TextMeshProUGUI ItemCount;
+        public TextMeshProUGUI ItemCountText;
         public TextMeshProUGUI BuyButtonText;
         public RawImage ItemImage;
         public Button BuyButton;
 
         public string ItemID;
         public int Price;
+        public int ItemCount;
         public bool Isthatstorestuff = false;
 
         #endregion

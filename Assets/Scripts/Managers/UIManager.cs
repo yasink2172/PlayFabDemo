@@ -28,7 +28,10 @@ namespace Demo.UI
             UserManager.PanelController.Loby.Initialize(UserManager, this);
             UserManager.PanelController.Inventory.Initialize(UserManager, this);
             UserManager.PanelController.Shop.Initialize(UserManager, this);
+            UserManager.PanelController.GameCam.Initialize(UserManager, this);
+            UserManager.PanelController.Leaderboard.Initialize(UserManager, this);
             UserManager.PlayFabManager.Initialize(UserManager, this);
+            UserManager.GameManager.Initialize(UserManager, this);
         }
 
         public void Init()
@@ -119,6 +122,14 @@ namespace Demo.UI
                 yield return null;
             }
             _waitShowAnimationEnd = false;
+        }
+
+        //Load items image.
+        public IEnumerator GetTexture(string url, RawImage image)
+        {
+            WWW wwwLoader = new WWW(url);
+            yield return wwwLoader;
+            image.texture = wwwLoader.texture;
         }
 
         #endregion

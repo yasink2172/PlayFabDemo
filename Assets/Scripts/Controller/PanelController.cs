@@ -16,6 +16,8 @@ namespace Demo.UI
         public Loby Loby;
         public Inventory Inventory;
         public Shop Shop;
+        public GameCam GameCam;
+        public Leaderboard Leaderboard;
 
         static int[] SingInPanelRectTransformPos = new int[] { 0, -500 };  //MID , LEFT
 

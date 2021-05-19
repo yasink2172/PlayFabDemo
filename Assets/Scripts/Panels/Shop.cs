@@ -28,9 +28,9 @@ namespace Demo.UI
         {
             for (int i = 0; i < itemCount; i++)
             {
-                GameObject shopitem = Instantiate(ShopItem);
-                shopitem.transform.parent = this.transform;
-                ShopItems.Add(shopitem);
+                GameObject _shopitem = Instantiate(ShopItem);
+                _shopitem.transform.parent = this.transform;
+                ShopItems.Add(_shopitem);
             }
         }
 

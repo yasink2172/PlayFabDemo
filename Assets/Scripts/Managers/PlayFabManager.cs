@@ -20,6 +20,8 @@ namespace Demo.UI
         private Inventory _inventory;
         private Shop _shop;
 
+        public Dictionary<string, string> ImageUrlList;
+
         #endregion
 
         #region Methods
@@ -37,7 +39,7 @@ namespace Demo.UI
 
         #endregion
 
-        #region PlayFab
+        #region PlayFabSingIn
 
         //Logs in.
         public void SingIn()
@@ -63,6 +65,9 @@ namespace Demo.UI
             _userManager.Invoke("LoginAccount", 2f);
         }
 
+        #endregion
+
+        #region PlayFabSingUp
         //Registers.
         public void SingUp()
         {
@@ -85,7 +90,48 @@ namespace Demo.UI
         void OnRegisterSuccess(RegisterPlayFabUserResult result)
         {
             _uiManager.MessageArea(_register.Message, _register.MessageText, _register.Green, "Your registration was successful.");
+
+            PlayFabClientAPI.UpdatePlayerStatistics(new UpdatePlayerStatisticsRequest
+            {
+                Statistics = new List<StatisticUpdate>{
+                new StatisticUpdate
+                {
+                    StatisticName = "XP",
+                    Value = 0
+                }
+            }
+            }, SetStatsResult, OnError);
         }
+
+        void SetStatsResult(UpdatePlayerStatisticsResult result)
+        {
+
+        }
+
+        #endregion
+
+        #region PlayFabGetStatistics
+
+        public void GetStatistics()
+        {
+            PlayFabClientAPI.GetPlayerStatistics(
+                new GetPlayerStatisticsRequest(),
+                OnGetStatistics,
+                error => Debug.LogError(error.GenerateErrorReport())
+            );
+        }
+
+        void OnGetStatistics(GetPlayerStatisticsResult result)
+        {
+            foreach (var eachStat in result.Statistics)
+            {
+                _userManager.PanelController.Loby.PlayerXP.text = eachStat.Value.ToString();
+            }
+        }
+
+        #endregion
+
+        #region PlayFabGeTitleData
 
         //Player info.
         public void GetTitleData()
@@ -97,7 +143,12 @@ namespace Demo.UI
         void PlayerInfo(GetAccountInfoResult result)
         {
             _loby.PlayerID.text = result.AccountInfo.PlayFabId;
+            GetStatistics();
         }
+
+        #endregion
+
+        #region PlayFabGetItemPrices
 
         //Shop items.
         public void GetItemPrices()
@@ -111,15 +162,22 @@ namespace Demo.UI
         {
             List<CatalogItem> _items = result.Catalog;
             _shop.CreateItems(_items.Count);
+            ImageUrlList = new Dictionary<string, string>();
+
             for (int i = 0; i < _shop.ShopItems.Count; i++)
             {
+                ImageUrlList.Add(_items[i].ItemId, _items[i].ItemImageUrl);
                 _shop.ShopItems[i].GetComponent<SetItem>().ItemID = _items[i].ItemId;
                 _shop.ShopItems[i].GetComponent<SetItem>().Price = (int)_items[i].VirtualCurrencyPrices["GD"];
                 _shop.ShopItems[i].GetComponent<SetItem>().PlayFabManager = this;
                 _shop.ShopItems[i].GetComponent<SetItem>().Isthatstorestuff = true;
-                StartCoroutine(GetTexture(_items[i].ItemImageUrl, _shop.ShopItems[i].GetComponent<SetItem>().ItemImage));
+                StartCoroutine(_uiManager.GetTexture(ImageUrlList[_items[i].ItemId], _shop.ShopItems[i].GetComponent<SetItem>().ItemImage));
             }
         }
+
+        #endregion
+
+        #region PlayFabBuyItem
 
         public void BuyItem(string name, int price)
         {
@@ -136,33 +194,77 @@ namespace Demo.UI
             print("The item's been taken.");
         }
 
+        #endregion
+
+        #region PlayFabUpdateInventory
+
         //Inventory items.
         public void UpdateInventory()
         {
             GetUserInventoryRequest request = new GetUserInventoryRequest();
 
-            PlayFabClientAPI.GetUserInventory(request,TakeInventory,OnError);
+            PlayFabClientAPI.GetUserInventory(request, TakeInventory, OnError);
         }
 
         void TakeInventory(GetUserInventoryResult result)
         {
             List<ItemInstance> _items = result.Inventory;
-            _inventory.CreateItems(_items.Count);
-            for (int i = 0; i < _inventory.InventoryItems.Count; i++)
+
+            for (int i = 0; i < _items.Count; i++)
             {
-                _inventory.InventoryItems[i].GetComponent<SetItem>().ItemID = _items[i].ItemId;
-                _inventory.InventoryItems[i].GetComponent<SetItem>().PlayFabManager = this;
-                //StartCoroutine(GetTexture(_items[i]., _inventory.ShopItems[i].GetComponent<SetItem>().ItemImage));
+                _inventory.CreateItems(_items[i].ItemId, _items[i].RemainingUses, ImageUrlList[_items[i].ItemId]);
             }
         }
 
-        //Load items image.
-        IEnumerator GetTexture(string url, RawImage image)
+        #endregion
+
+        #region PlayFabCalculateXp
+
+        public void CalculateXp(int a)
         {
-            WWW wwwLoader = new WWW(url);
-            yield return wwwLoader;
-            image.texture = wwwLoader.texture;
+            ExecuteCloudScriptRequest request = new ExecuteCloudScriptRequest
+            {
+                FunctionName = "CalculateXp",
+                FunctionParameter = new
+                {
+                    kill = a
+                }
+            };
+            PlayFabClientAPI.ExecuteCloudScript(request,
+                result =>
+                {
+                    GetStatistics();
+                },
+                OnError);
         }
+
+        #endregion
+
+        #region PlayFabLeaderboards
+
+        public void GetLeaderboarder()
+        {
+            var request = new GetLeaderboardRequest
+            {
+                StartPosition = 0,
+                StatisticName = "XP",
+                MaxResultsCount = 30
+            };
+            PlayFabClientAPI.GetLeaderboard(request, OnGetLeaderboard, OnError);
+        }
+
+        void OnGetLeaderboard(GetLeaderboardResult result)
+        {
+            for (int i = 0; i < result.Leaderboard.Count; i++)
+            {
+                _userManager.PanelController.Leaderboard.CreateLeaderboardBar(i + 1,
+                    result.Leaderboard[i].PlayFabId, result.Leaderboard[i].StatValue);
+            }
+        }
+
+        #endregion
+
+        #region PlayFabOnError
 
         //Errors
         void OnError(PlayFabError error)

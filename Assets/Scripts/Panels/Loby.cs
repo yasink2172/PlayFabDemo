@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using PlayFab;
 using PlayFab.ClientModels;
 using TMPro;
-using Newtonsoft.Json;
 
 namespace Demo.UI
 {
@@ -23,6 +22,8 @@ namespace Demo.UI
 
         public Button InventoryButton;
         public Button ShopButton;
+        public Button PlayButton;
+        public Button LeaderboardButton;
 
         #endregion
 
@@ -33,6 +34,8 @@ namespace Demo.UI
             _userManager.PlayFabManager.GetTitleData();
             InventoryButton.onClick.AddListener(() => Inventory());
             ShopButton.onClick.AddListener(() => Shop());
+            PlayButton.onClick.AddListener(() => PlayGame());
+            LeaderboardButton.onClick.AddListener(() => Leaderboard());
         }
 
         void Update()
@@ -55,6 +58,8 @@ namespace Demo.UI
             }
             InventoryButton.enabled = false;
             ShopButton.enabled = true;
+            PlayButton.enabled = true;
+            LeaderboardButton.enabled = true;
         }
 
         void Shop()
@@ -62,10 +67,35 @@ namespace Demo.UI
             if (!_userManager.PanelController.Shop.gameObject.activeInHierarchy)
             {
                 _userManager.StateManager.ChangeState(1);
-                _userManager.PlayFabManager.GetItemPrices();
             }
             InventoryButton.enabled = true;
             ShopButton.enabled = false;
+            PlayButton.enabled = true;
+            LeaderboardButton.enabled = true;
+        }
+
+        void PlayGame()
+        {
+            if (!_userManager.PanelController.GameCam.gameObject.activeInHierarchy)
+            {
+                _userManager.StateManager.ChangeState(2);
+            }
+            InventoryButton.enabled = true;
+            ShopButton.enabled = true;
+            PlayButton.enabled = false;
+            LeaderboardButton.enabled = true;
+        }
+
+        void Leaderboard()
+        {
+            if (!_userManager.PanelController.Leaderboard.gameObject.activeInHierarchy)
+            {
+                _userManager.StateManager.ChangeState(3);
+            }
+            InventoryButton.enabled = true;
+            ShopButton.enabled = true;
+            PlayButton.enabled = true;
+            LeaderboardButton.enabled = false;
         }
 
         #endregion

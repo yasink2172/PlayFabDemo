@@ -11,7 +11,9 @@ namespace Demo.UI
         public enum StateType
         {
             Inventory = 0,
-            Shop
+            Shop,
+            GameCam,
+            Leaderboards
         }
 
         protected StateType _stateType;
