@@ -20,6 +20,7 @@ namespace Demo.UI
 
         public string ItemID;
         public int Price;
+        public string Currency;
         public int ItemCount;
         public bool Isthatstorestuff = false;
 

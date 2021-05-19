@@ -19,6 +19,7 @@ namespace Demo.UI
 
         public TextMeshProUGUI PlayerID;
         public TextMeshProUGUI PlayerXP;
+        public TextMeshProUGUI PlayerGL;
 
         public Button InventoryButton;
         public Button ShopButton;

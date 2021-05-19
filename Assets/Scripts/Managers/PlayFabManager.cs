@@ -19,8 +19,11 @@ namespace Demo.UI
         private Loby _loby;
         private Inventory _inventory;
         private Shop _shop;
+        private string _mail;
+        private string _password;
 
         public Dictionary<string, string> ImageUrlList;
+        public GetPlayerCombinedInfoRequestParams info;
 
         #endregion
 
@@ -50,6 +53,7 @@ namespace Demo.UI
                 {
                     Email = _login.MailInput.text,
                     Password = _login.Password.text,
+                    InfoRequestParameters = info
                 };
                 PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnError);
             }
@@ -61,8 +65,11 @@ namespace Demo.UI
 
         void OnLoginSuccess(LoginResult result)
         {
+            _mail = _login.MailInput.text;
+            _password = _login.Password.text;
             _uiManager.MessageArea(_login.Message, _login.MessageText, _login.Green, "Login successful.");
             _userManager.Invoke("LoginAccount", 2f);
+            _loby.PlayerGL.text = result.InfoResultPayload.UserVirtualCurrency["GD"].ToString();
         }
 
         #endregion
@@ -105,7 +112,7 @@ namespace Demo.UI
 
         void SetStatsResult(UpdatePlayerStatisticsResult result)
         {
-
+            print("Added XP stats");
         }
 
         #endregion
@@ -192,6 +199,18 @@ namespace Demo.UI
         void ItemPurchased(PurchaseItemResult result)
         {
             print("The item's been taken.");
+            var request = new LoginWithEmailAddressRequest
+            {
+                Email = _mail,
+                Password = _password,
+                InfoRequestParameters = info
+            };
+            PlayFabClientAPI.LoginWithEmailAddress(request, OnLogin, OnError);
+        }
+
+        void OnLogin(LoginResult result)
+        {
+            _loby.PlayerGL.text = result.InfoResultPayload.UserVirtualCurrency["GD"].ToString();
         }
 
         #endregion
@@ -272,10 +291,12 @@ namespace Demo.UI
             if (_login.gameObject.activeInHierarchy)
             {
                 _uiManager.MessageArea(_login.Message, _login.MessageText, _login.Red, error.ErrorMessage);
+                print(error);
             }
             else if (_register.gameObject.activeInHierarchy)
             {
                 _uiManager.MessageArea(_register.Message, _register.MessageText, _register.Red, error.ErrorMessage);
+                print(error);
             }
             else
             {
