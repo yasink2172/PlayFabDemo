@@ -168,7 +168,7 @@ namespace Demo.UI
         void ItemInfo(GetCatalogItemsResult result)
         {
             List<CatalogItem> _items = result.Catalog;
-            _shop.CreateItems(_items.Count);
+            _shop.CreateItems(_items.Count - 1);
             ImageUrlList = new Dictionary<string, string>();
 
             for (int i = 0; i < _shop.ShopItems.Count; i++)
@@ -199,6 +199,15 @@ namespace Demo.UI
         void ItemPurchased(PurchaseItemResult result)
         {
             print("The item's been taken.");
+            GetCurrency();
+        }
+
+        #endregion
+
+        #region PlayFabGetCurrency
+
+        void GetCurrency()
+        {
             var request = new LoginWithEmailAddressRequest
             {
                 Email = _mail,
@@ -231,7 +240,10 @@ namespace Demo.UI
 
             for (int i = 0; i < _items.Count; i++)
             {
-                _inventory.CreateItems(_items[i].ItemId, _items[i].RemainingUses, ImageUrlList[_items[i].ItemId]);
+                if (_items[i].ItemId != "GetGold")
+                {
+                    _inventory.CreateItems(_items[i].ItemId, _items[i].RemainingUses, ImageUrlList[_items[i].ItemId]);
+                }
             }
         }
 
@@ -279,6 +291,28 @@ namespace Demo.UI
                 _userManager.PanelController.Leaderboard.CreateLeaderboardBar(i + 1,
                     result.Leaderboard[i].PlayFabId, result.Leaderboard[i].StatValue);
             }
+        }
+
+        #endregion
+
+        #region PlayFabAddCurrency
+
+        public void AddCurrency()
+        {
+            PurchaseItemRequest request = new PurchaseItemRequest
+            {
+                ItemId = "GetGold",
+                VirtualCurrency = "GD",
+                Price = 0
+            };
+
+            PlayFabClientAPI.PurchaseItem(request, OnAddCurrencyResult, OnError);
+        }
+
+        void OnAddCurrencyResult(PurchaseItemResult result)
+        {
+            print("Get Gold");
+            GetCurrency();
         }
 
         #endregion

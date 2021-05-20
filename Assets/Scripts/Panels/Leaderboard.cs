@@ -30,7 +30,7 @@ namespace Demo.UI
         {
             GameObject bar = Instantiate(LeaderboardBar);
             bar.transform.parent = LeaderboardScroll.transform;
-            bar.GetComponent<LeaderboardBar>().NumberText.text = Number.ToString();
+            bar.GetComponent<LeaderboardBar>().NumberText.text = Number.ToString() + " -";
             bar.GetComponent<LeaderboardBar>().IDText.text = ID;
             bar.GetComponent<LeaderboardBar>().XPText.text = XP.ToString();
             LeaderboardBars.Add(bar);

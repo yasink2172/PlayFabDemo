@@ -21,6 +21,7 @@ namespace Demo.UI
         public TextMeshProUGUI PlayerXP;
         public TextMeshProUGUI PlayerGL;
 
+        public Button AddCurenncyButton;
         public Button InventoryButton;
         public Button ShopButton;
         public Button PlayButton;
@@ -33,6 +34,7 @@ namespace Demo.UI
         void Start()
         {
             _userManager.PlayFabManager.GetTitleData();
+            AddCurenncyButton.onClick.AddListener(() => AddCurenncy());
             InventoryButton.onClick.AddListener(() => Inventory());
             ShopButton.onClick.AddListener(() => Shop());
             PlayButton.onClick.AddListener(() => PlayGame());
@@ -97,6 +99,11 @@ namespace Demo.UI
             ShopButton.enabled = true;
             PlayButton.enabled = true;
             LeaderboardButton.enabled = false;
+        }
+
+        void AddCurenncy()
+        {
+            _userManager.PlayFabManager.AddCurrency();
         }
 
         #endregion
